@@ -16,4 +16,11 @@ Route::group([
     ),
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
+    Route::crud('product-category', 'ProductCategoryCrudController');
+    Route::crud('product-series', 'ProductSeriesCrudController');
+    Route::crud('product-attribute', 'ProductAttributeCrudController');
+    Route::crud('product', 'ProductCrudController');
+    Route::crud('string-attribute', 'StringAttributeCrudController');
+    Route::crud('numerical-attribute', 'NumericalAttributeCrudController');
+    Route::crud('svg-attribute', 'SvgAttributeCrudController');
 }); // this should be the absolute last line of this file

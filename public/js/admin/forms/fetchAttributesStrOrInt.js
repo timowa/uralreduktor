@@ -1,0 +1,29 @@
+crud.field('attribute_type').onChange(function(field){
+    toggleFields()
+})
+$(document).ready(function(){
+    toggleFields()
+})
+function toggleFields(){
+    if(crud.field('attribute_type').value=='string'){
+        crud.field('strAttributes').show().enable()
+        crud.field('numAttributes').hide().disable()
+        crud.field('svgAttributes').hide().disable()
+        $('select[name="numAttributes[]"]').empty()
+        $('select[name="svgAttributes[]"]').empty()
+    }
+    if(crud.field('attribute_type').value=='int'){
+        crud.field('numAttributes').show().enable()
+        crud.field('strAttributes').hide().disable()
+        crud.field('svgAttributes').hide().disable()
+        $('select[name="strAttributes[]"]').empty()
+        $('select[name="svgAttributes[]"]').empty()
+    }
+    if(crud.field('attribute_type').value=='svg'){
+        crud.field('svgAttributes').show().enable()
+        crud.field('strAttributes').hide().disable()
+        crud.field('numAttributes').hide().disable()
+        $('select[name="strAttributes[]"]').empty()
+        $('select[name="numAttributes[]"]').empty()
+    }
+}
