@@ -89,9 +89,6 @@ $meta = '';
 
     toggleHeaderOrderBtnClassOnScroll();
 </script>
-@php
-$category = $category;
-@endphp
 <main>
     <nav class="breadcrumbs">
         <div class="container">
@@ -158,20 +155,21 @@ $category = $category;
                             </svg>
                         </summary>
                         <ul role="list">
-                            @foreach($product->attributes() as $name => $values)
-                                <li><p>{{$name}}</p><span>{{join(';',$values)}}</span></li>
+                            @foreach($product->details() as $name => $value)
+                                <li><p>{{$name}}</p><span>{{$value}}</span></li>
                             @endforeach
 
                         </ul>
                     </details>
                     <ul role="list" class="product-card__list">
-                        @foreach($product->attributes() as $name => $values)
-                            <li><p>{{$name}}</p><span>{{join(';',$values)}}</span></li>
-                        @endforeach
+                    @foreach($product->details() as $name => $value)
+                            <li><p>{{$name}}</p><span>{{$value}}</span></li>
+                    @endforeach
                     </ul>
                     <button class="primary-btn order-btn order-btn--desktop" type="button" @click="orderForm = true">Запросить</button>
                 </aside>
             </div>
+
             @if($product->productsFromSeries()->isNotEmpty())
             <div class="product-card__series-slider-wrapper">
                 <h3 class="product-card__series-slider-title">Редукторы этой серии</h3>
@@ -200,6 +198,7 @@ $category = $category;
                 </div>
             </div>
             @endif
+
             <div class="product-card__info">
                 <ul class="product-card__tabs" role="list">
                     <li @click="toggleProductCardTabs(event,'productCardDescr')" class="active">
@@ -343,164 +342,62 @@ $category = $category;
             evt.currentTarget.className += "active";
         }
     </script>
+
 </main>
-{{--<div class="order-form" :class="{'active': orderForm === true}" x-data="{ {{(count($product->gearRatios)>0)?' activateNextStep1: false,':'' }} {{(count($product->buildOptions)>0)?' activateNextStep2: false,':'' }} nextStep: false, showTooltip1: true, showTooltip2: true, activateCheckbox: false }">--}}
-{{--    <div class="order-form__content" data-simplebar>--}}
-{{--        <form action="/makeOrder" id="makeOrder" method="post">--}}
+<div class="order-form" :class="{'active': orderForm === true}" x-data="{ nextStep: false, showTooltip1: true, showTooltip2: true, activateCheckbox: false }">
+    <div class="order-form__content" data-simplebar>
+        <form action="/makeOrder" id="makeOrder" method="post">
 {{--            <textarea style="display: none" name="details" id="" cols="30" rows="10">{{$product->adminDetails()}}</textarea>--}}
-{{--            <input type="hidden" name="product_name" value="{{$product->name}}">--}}
-{{--            <input type="hidden" name="uri" value="{{url()->current()}}">--}}
-{{--            @csrf--}}
-{{--            <div class="order-form__step-page order-form__step-page-1" x-data="{ showFields: true }">--}}
-{{--                <div class="order-form__step-top">--}}
-{{--                    <p class="order-form__step">Шаг 1 из 2</p>--}}
-{{--                    <svg @click="orderForm = false" width="36" height="36">--}}
-{{--                        <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-exit')}}"></use>--}}
-{{--                    </svg>--}}
-{{--                </div>--}}
-{{--                <h3 class="title title-h3 users-conf-name">{{$product->name}};</h3>--}}
-{{--                <fieldset>--}}
-{{--                    @if(count($product->gearRatios)>0)--}}
+            <input type="hidden" name="product_name" value="{{$product->name}}">
+            <input type="hidden" name="uri" value="{{url()->current()}}">
+            @csrf
+            <div class="order-form__step-page order-form__step-page-1" x-data="{ showFields: true }">
+                <div class="order-form__step-top">
+                    <p class="order-form__step">Шаг 1 из 2</p>
+                    <svg @click="orderForm = false" width="36" height="36">
+                        <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-exit')}}"></use>
+                    </svg>
+                </div>
+                <h3 class="title title-h3 users-conf-name">{{$product->name}};</h3>
+                <fieldset>
+                    @foreach($configurator->fields() as $field)
 
-{{--                    <div class="order-form-controls-group order-form-controls-group--not-last" x-show="showFields">--}}
-{{--                        <div class="order-form-controls-group__tooltip" x-bind:class="{ 'inactive': showTooltip1 === false }">--}}
-{{--                            <p class="order-form-controls-group__tooltip-text">--}}
-{{--                                укажите передаточное отношение--}}
-{{--                            </p>--}}
-{{--                            <button type="button" aria-label="button" class="order-form-controls-group__tooltip-close" @click="showTooltip1 = false">--}}
-{{--                                <span></span>--}}
-{{--                                <span></span>--}}
-{{--                            </button>--}}
-{{--                        </div>--}}
-{{--                        <h4 class="order-form-controls-group__title"><span>i</span> - передаточное отношение</h4>--}}
-{{--                        <ul class="order-form-controls-group__radio-list" role="list" x-data="{setup: ''}">--}}
-{{--                            @foreach($product->series->gearRatios()->orderBy('name','asc')->get() as $option)--}}
-{{--                            @if($product->gearRatios->contains('name',$option->name))--}}
-{{--                            <li :class="{'active': setup === {{$option->name}}}" {{$product->gearRatios->contains('name',$option->name)? '': 'class=disabled'}} @click="setup = {{$option->name}};activateNextStep1 = true;showTooltip1 = false">--}}
-{{--                                <input type="radio" name="Передаточное отношение" value="{{$option->name}}" id="{{$option->name}}" data-name="{{$option->name}}">--}}
-{{--                                <label for="{{$option->name}}">{{$option->name}}</label>--}}
-{{--                            </li>--}}
-{{--                            @endif--}}
-{{--                            @endforeach--}}
-{{--                            <li style="min-width: 79px;" :class="{'active': setup === 'Не знаю'}" @click="setup = 'Не знаю';activateNextStep1 = true;showTooltip1 = false">--}}
-{{--                                <input type="radio" name="Передаточное отношение" value="Не знаю" id="Не знаю" data-name="?">--}}
-{{--                                <label for="Не знаю">Не знаю</label>--}}
-{{--                            </li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
-{{--                    @endif--}}
-{{--                    @if(count($product->buildOptions)>0)--}}
 
-{{--                    <div class="order-form-controls-group order-form-controls-group--not-last" x-show="showFields">--}}
-{{--                        <div class="order-form-controls-group__tooltip" x-bind:class="{ 'inactive': showTooltip2 === false }">--}}
-{{--                            <p class="order-form-controls-group__tooltip-text">--}}
-{{--                                укажите вариант сборки--}}
-{{--                            </p>--}}
-{{--                            <button type="button" aria-label="button" class="order-form-controls-group__tooltip-close" @click="showTooltip2 = false">--}}
-{{--                                <span></span>--}}
-{{--                                <span></span>--}}
-{{--                            </button>--}}
-{{--                        </div>--}}
-{{--                        <h4 class="order-form-controls-group__title">Вариант сборки</h4>--}}
-{{--                        <ul class="order-form-controls-group__radio-list" role="list" x-data="{setup: ''}">--}}
-{{--                            @foreach($product->series->buildOptions as $option)--}}
-{{--                            @if($product->buildOptions->contains('name',$option->name))--}}
-{{--                            <li {{$product->buildOptions->contains('name',$option->name)? '': 'class=disabled'}} :class="{'active': setup === {{$option->name}}}" @click="setup = {{$option->name}};activateNextStep2 = true;showTooltip2 = false">--}}
-{{--                                <input type="radio" name="Вариант сборки" value="{{$option->name}}" id="{{$option->name}}" data-name="{{$option->name}}">--}}
-{{--                                <label for="{{$option->name}}">{{$option->name}}</label>--}}
-{{--                            </li>--}}
-{{--                            @endif--}}
-{{--                            @endforeach--}}
-{{--                            <li style="min-width: 79px;" :class="{'active': setup === 'Не знаю'}" @click="setup = 'Не знаю';activateNextStep2 = true;showTooltip2 = false">--}}
-{{--                                <input type="radio" name="Вариант сборки" value="Не знаю" id="Не знаю" data-name="?">--}}
-{{--                                <label for="Не знаю">Не знаю</label>--}}
-{{--                            </li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
-{{--                    @endif--}}
-{{--                    @if(count($product->frontShafts)>0)--}}
-
-{{--                    <div class="order-form-controls-group order-form-controls-group--not-last" x-show="{{(count($product->frontShafts)>1)? 'showFields':'false'}}">--}}
-{{--                        <h4 class="order-form-controls-group__title">Вал входной</h4>--}}
-{{--                        <div class="order-form__select-dropdown" x-data="{selectDropdowntext: '', toggleDropdownList: false}">--}}
-{{--                            <div class="order-form__select-dropdown-top disable" @click="toggleDropdownList = !toggleDropdownList">--}}
-{{--                                <span x-text="selectDropdowntext === '' ? '{{$product->frontShaft!=null?$product->frontShaft->name:'Вариант'}}' : selectDropdowntext" :class="{'active':selectDropdowntext != ''}">{{$product->frontShaft!=null?$product->frontShaft->name:'Вариант'}}</span>--}}
-{{--                                <svg :class="{'active': toggleDropdownList}" width="16" height="16">--}}
-{{--                                    <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-dropdown')}}"></use>--}}
-{{--                                </svg>--}}
-{{--                            </div>--}}
-{{--                            <select name="Вал входной" style="display:none">--}}
-{{--                                @foreach($product->frontShafts as $shaft)--}}
-{{--                                <option value="{{$shaft->name}}" {{$product->frontShaft!=null?($product->frontShaft->name==$shaft->name?'selected':''):''}}>{{$shaft->name}}</option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-{{--                            <ul role="list" class="order-form__select-dropdown-list " x-show="toggleDropdownList === true" x-collapse.duration.500ms>--}}
-{{--                                @foreach($product->frontShafts as $shaft)--}}
-{{--                                <li @click="selectDropdowntext = '{{$shaft->name}}';activateNextStep = true" data-select="Вал входной" data-option="{{$shaft->name}}"><span :class="{'active': selectDropdowntext === '{{$shaft->name}}'}" class="{{$product->frontShaft!=null?($product->frontShaft->name==$shaft->name?'aactive':'1'):'2'}}">{{$shaft->name}}</span></li>--}}
-
-{{--                                @endforeach--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    @endif--}}
-{{--                    @if(count($product->outputShafts)>0)--}}
-
-{{--                    <div class="order-form-controls-group" x-show="{{(count($product->outputShafts)>1)? 'showFields':'false'}}">--}}
-{{--                        <h4 class="order-form-controls-group__title">Вал выходной</h4>--}}
-{{--                        <div class="order-form__select-dropdown" x-data="{selectDropdowntext: '', toggleDropdownList: false}">--}}
-{{--                            <div class="order-form__select-dropdown-top" @click="toggleDropdownList = !toggleDropdownList">--}}
-{{--                                <span x-text="selectDropdowntext === '' ? '{{$product->outputShaft!=null?$product->outputShaft->name:'Вариант'}}' : selectDropdowntext" :class="{'active':selectDropdowntext != ''}">{{$product->outputShaft!=null?$product->outputShaft->name:'Вариант'}}</span>--}}
-{{--                                <svg :class="{'active': toggleDropdownList}" width="16" height="16">--}}
-{{--                                    <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-dropdown')}}"></use>--}}
-{{--                                </svg>--}}
-{{--                            </div>--}}
-{{--                            <select name="Вал выходной" style="display:none">--}}
-{{--                                @foreach($product->outputShafts as $shaft)--}}
-{{--                                <option value="{{$shaft->name}}" {{$product->outputShaft!=null?($product->outputShaft->name==$shaft->name?'selected':''):''}}>{{$shaft->name}}</option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-{{--                            <ul role="list" class="order-form__select-dropdown-list" x-ref="selectDropdownList" x-bind:style="toggleDropdownList === true ? 'height: ' + $refs.selectDropdownList.scrollHeight + 'px' : ''" :class="{'active': toggleDropdownList === true}">--}}
-{{--                                @foreach($product->outputShafts as $shaft)--}}
-{{--                                <li @click="selectDropdowntext = '{{$shaft->name}}'" data-select="Вал выходной" data-option="{{$shaft->name}}"><span :class="{'active': selectDropdowntext === '{{$shaft->name}}'}" class="{{$product->outputShaft!=null?($product->outputShaft->name==$shaft->name?'aactive':''):''}}">{{$shaft->name}}</span></li>--}}
-
-{{--                                @endforeach--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    @endif--}}
-{{--                    <div class="order-form__accept-label">--}}
-{{--                        <input type="checkbox" name="accept" id="accept">--}}
-{{--                        <label for="accept" @click="activateCheckbox = true;nextStep = true">Отметьте, если не знаете, что выбрать.</label>--}}
-{{--                    </div>--}}
-{{--                    <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn disable" x-bind:class="{ 'active': {{(count($product->gearRatios)>0)?' activateNextStep1 === true':'' }} {{((count($product->gearRatios)>0)&&(count($product->buildOptions)>0))?'&&':''}} {{(count($product->buildOptions)>0)?' activateNextStep2 === true':'' }}  }" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true">Следующий шаг</button>--}}
-{{--                    <!-- <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true" x-show="activateCheckbox === true">Следующий шаг</button> -->--}}
-{{--                </fieldset>--}}
-{{--            </div>--}}
-{{--            <div class="order-form__step-page order-form__step-page-2" :class="{'active': nextStep === true}">--}}
-{{--                <div class="order-form__step-top">--}}
-{{--                    <p class="order-form__step order-form__step-2" @click="nextStep = false;activateCheckbox = false">--}}
-{{--                        <svg width="18" height="36">--}}
-{{--                            <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#product-title-arrow')}}"></use>--}}
-{{--                        </svg>Шаг 2 из 2--}}
-{{--                    </p>--}}
-{{--                    <svg @click="orderForm = false" width="36" height="36">--}}
-{{--                        <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-exit')}}"></use>--}}
-{{--                    </svg>--}}
-{{--                </div>--}}
-{{--                <h2 class="title title-h2">Отправить заявку</h2>--}}
-{{--                <h3 class="title title-h3 users-conf-name">{{$product->name}};</h3>--}}
-{{--                <fieldset>--}}
-{{--                    <div class="order-form__product-dropdown" x-data="{selectDropdownList: '',toggleDropdownList: false}">--}}
-{{--                        <div class="order-form__product-dropdown-top" @click="toggleDropdownList = !toggleDropdownList">--}}
-{{--                            <div class="order-form__product-dropdown-title">--}}
-{{--                                <p>Тип передачи</p>--}}
-{{--                                <span>{{$category->name}}</span>--}}
-{{--                            </div>--}}
-{{--                            <svg :class="{'active': toggleDropdownList}" width="16" height="16">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-dropdown')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                        </div>--}}
-{{--                        <ul role="list" class="order-form__product-dropdown-list" id="users-list" x-ref="selectDropdownList" x-bind:style="toggleDropdownList === true ? 'height: ' + $refs.selectDropdownList.scrollHeight + 'px' : ''" :class="{'active': toggleDropdownList === true}">--}}
+                        {{$field->render()}}
+                    @endforeach
+                    <div class="order-form__accept-label">
+                        <input type="checkbox" name="accept" id="accept">
+                        <label for="accept" @click="activateCheckbox = true;nextStep = true">Отметьте, если не знаете, что выбрать.</label>
+                    </div>
+                    <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn disable" x-bind:class="{ 'active':  }" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true">Следующий шаг</button>
+                    <!-- <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true" x-show="activateCheckbox === true">Следующий шаг</button> -->
+                </fieldset>
+            </div>
+            <div class="order-form__step-page order-form__step-page-2" :class="{'active': nextStep === true}">
+                <div class="order-form__step-top">
+                    <p class="order-form__step order-form__step-2" @click="nextStep = false;activateCheckbox = false">
+                        <svg width="18" height="36">
+                            <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#product-title-arrow')}}"></use>
+                        </svg>Шаг 2 из 2
+                    </p>
+                    <svg @click="orderForm = false" width="36" height="36">
+                        <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-exit')}}"></use>
+                    </svg>
+                </div>
+                <h2 class="title title-h2">Отправить заявку</h2>
+                <h3 class="title title-h3 users-conf-name">{{$product->name}};</h3>
+                <fieldset>
+                    <div class="order-form__product-dropdown" x-data="{selectDropdownList: '',toggleDropdownList: false}">
+                        <div class="order-form__product-dropdown-top" @click="toggleDropdownList = !toggleDropdownList">
+                            <div class="order-form__product-dropdown-title">
+                                <p>Тип передачи</p>
+                                <span>{{$category->name}}</span>
+                            </div>
+                            <svg :class="{'active': toggleDropdownList}" width="16" height="16">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-dropdown')}}"></use>
+                            </svg>
+                        </div>
+                        <ul role="list" class="order-form__product-dropdown-list" id="users-list" x-ref="selectDropdownList" x-bind:style="toggleDropdownList === true ? 'height: ' + $refs.selectDropdownList.scrollHeight + 'px' : ''" :class="{'active': toggleDropdownList === true}">
 {{--                            <li>--}}
 {{--                                <p>Расположение осей</p>--}}
 {{--                                <span>{{($product->locationOfAxes===null)? 'Не указано':$product->locationOfAxes->name}}</span>--}}
@@ -525,67 +422,67 @@ $category = $category;
 {{--                                <p>Вал выходной</p>--}}
 {{--                                <span></span>--}}
 {{--                            </li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
-{{--                    <div class="order-form__input-group">--}}
-{{--                        <label for="orderFormName">ФИО--}}
-{{--                            <svg width="8" height="8">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#required-icon')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                        </label>--}}
-{{--                        <div class="form-controls-wrapper order-form__form-controls-wrapper">--}}
-{{--                            <input type="text" name="user_name" id="orderFormName" placeholder="Ваше имя" required>--}}
-{{--                            <svg class="icon-error" width="28" height="28">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-error')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                            <svg class="icon-correct" width="28" height="28">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-correct')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="order-form__input-group">--}}
-{{--                        <label for="orderFormMail">E-mail--}}
-{{--                            <svg width="8" height="8">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#required-icon')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                        </label>--}}
-{{--                        <div class="form-controls-wrapper order-form__form-controls-wrapper">--}}
-{{--                            <input type="text" name="user_email" id="orderFormMail" placeholder="ivan@mail.ru" required>--}}
-{{--                            <svg class="icon-error" width="28" height="28">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-error')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                            <svg class="icon-correct" width="28" height="28">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-correct')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="order-form__input-group">--}}
-{{--                        <label for="orderFormTel">Телефон</label>--}}
-{{--                        <div class="form-controls-wrapper order-form__form-controls-wrapper">--}}
-{{--                            <input type="text" name="user_phone" id="orderFormTel" placeholder="8-999-99-99-99" required>--}}
-{{--                            <svg class="icon-error" width="28" height="28">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-error')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                            <svg class="icon-correct" width="28" height="28">--}}
-{{--                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-correct')}}"></use>--}}
-{{--                            </svg>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="order-form__input-group" style="padding-bottom:0;">--}}
-{{--                        <label for="textarea">Комментарий</label>--}}
-{{--                        <div class="form-controls-wrapper order-form__form-controls-wrapper">--}}
-{{--                            <textarea name="user_comment" id="textarea" placeholder="Введите текст"></textarea>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="order-form__accept-label order-form__accept-label--policy">--}}
-{{--                        <input type="checkbox" name="acceptPolicy" id="acceptPolicy" required>--}}
-{{--                        <label for="acceptPolicy"><a href="#">Подтверждаю согласие с политикой конфиденциальности</a></label>--}}
-{{--                    </div>--}}
+                        </ul>
+                    </div>
+                    <div class="order-form__input-group">
+                        <label for="orderFormName">ФИО
+                            <svg width="8" height="8">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#required-icon')}}"></use>
+                            </svg>
+                        </label>
+                        <div class="form-controls-wrapper order-form__form-controls-wrapper">
+                            <input type="text" name="user_name" id="orderFormName" placeholder="Ваше имя" required>
+                            <svg class="icon-error" width="28" height="28">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-error')}}"></use>
+                            </svg>
+                            <svg class="icon-correct" width="28" height="28">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-correct')}}"></use>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="order-form__input-group">
+                        <label for="orderFormMail">E-mail
+                            <svg width="8" height="8">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#required-icon')}}"></use>
+                            </svg>
+                        </label>
+                        <div class="form-controls-wrapper order-form__form-controls-wrapper">
+                            <input type="text" name="user_email" id="orderFormMail" placeholder="ivan@mail.ru" required>
+                            <svg class="icon-error" width="28" height="28">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-error')}}"></use>
+                            </svg>
+                            <svg class="icon-correct" width="28" height="28">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-correct')}}"></use>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="order-form__input-group">
+                        <label for="orderFormTel">Телефон</label>
+                        <div class="form-controls-wrapper order-form__form-controls-wrapper">
+                            <input type="text" name="user_phone" id="orderFormTel" placeholder="8-999-99-99-99" required>
+                            <svg class="icon-error" width="28" height="28">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-error')}}"></use>
+                            </svg>
+                            <svg class="icon-correct" width="28" height="28">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-correct')}}"></use>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="order-form__input-group" style="padding-bottom:0;">
+                        <label for="textarea">Комментарий</label>
+                        <div class="form-controls-wrapper order-form__form-controls-wrapper">
+                            <textarea name="user_comment" id="textarea" placeholder="Введите текст"></textarea>
+                        </div>
+                    </div>
+                    <div class="order-form__accept-label order-form__accept-label--policy">
+                        <input type="checkbox" name="acceptPolicy" id="acceptPolicy" required>
+                        <label for="acceptPolicy"><a href="#">Подтверждаю согласие с политикой конфиденциальности</a></label>
+                    </div>
 {{--                    {!! Captcha::display($attributes) !!}--}}
-{{--                    <button type="submit" class="primary-btn order-form__submit-btn">Отправить заявку</button>--}}
-{{--                </fieldset>--}}
-{{--            </div>--}}
-{{--        </form>--}}
-{{--    </div>--}}
-{{--</div>--}}
+                    <button type="submit" class="primary-btn order-form__submit-btn">Отправить заявку</button>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

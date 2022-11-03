@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\NumericalAttribute;
+use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\StringAttribute;
 use App\Models\SvgAttribute;
@@ -35,14 +36,37 @@ trait hasAttributes
         $res =[];
         $allAttributes = ProductAttribute::get();
         foreach ($allAttributes as $attribute){
+            $values = [];
+            $default = '';
             foreach ($this->attribute_relations as $attr_key => $data){
                 $curAttributes =$this->{$data['relation_name']}()->where('attribute_id',$attribute->id)->get();
                 if($curAttributes->isNotEmpty()){
                     foreach ($curAttributes as $curAttribute){
-                        $res[$attribute->name][]=$curAttribute->value;
+                        if(!is_null($curAttribute->icon)){
+                            $values[] = [
+                                'value'=>$curAttribute->value,
+                                'icon'=>$curAttribute->icon
+                            ];
+                        }else{
+                            $values[]=$curAttribute->value;
+                        }
+                        if($attribute->has_default_value && $this::class == Product::class && isset($this->other_attributes["default_$attribute->id"])){
+                            $default=$curAttribute->find($this->other_attributes["default_$attribute->id"])->value;
+                        }
                     }
                 }
             }
+            if(!empty($values)){
+                $res[$attribute->id]=[
+                    'name'=>$attribute->name,
+                    'value'=>count($values)>1?$values:$values[0],
+                    'cft'=>$attribute->configurator_field_type
+            ];
+                if(!empty($default)){
+                    $res[$attribute->id]['default']=$default;
+                }
+            }
+
         }
         return $res;
     }

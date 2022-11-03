@@ -290,8 +290,8 @@
                         <h3 class="title title-h3">{{$product->name}}</h3>
                        </figcaption>
                         <ul class="catalog-card__descr catalog-card__descr--pos-abs">
-                            @foreach($product->attributes() as $name => $values)
-                                <li><p>{{$name}}</p><span>{{join(';',$values)}}</span></li>
+                            @foreach($product->details() as $name => $value)
+                                <li><p>{{$name}}</p><span>{{$value}}</span></li>
                             @endforeach
 {{--                            {{$product->details()}}--}}
                         </ul>
@@ -302,8 +302,8 @@
                 </div>
                 <div class="catalog-card__aside">
                     <ul class="catalog-card__descr">
-                        @foreach($product->attributes() as $name => $values)
-                            <li><p>{{$name}}</p><span>{{join(';',$values)}}</span></li>
+                        @foreach($product->details() as $name => $value)
+                            <li><p>{{$name}}</p><span>{{$value}}</span></li>
                         @endforeach
 {{--                        {{$product->details()}}--}}
                     </ul>

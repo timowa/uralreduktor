@@ -175,6 +175,22 @@ class ProductSeriesCrudController extends CrudController
 
         }
         CRUD::addFields($fields);
+        CRUD::addFields(array(
+            [   // select_and_order
+            'name'  => 'attributes_order_card',
+            'label' => "Порядок отображения атрибутов в карточке товара",
+            'type'  => 'select_and_order',
+            'options' => $attributes->pluck('name','id')->toArray(),
+            'tab'=>'Порядок отображения'
+            ],
+            [   // select_and_order
+                'name'  => 'attributes_order_configurator',
+                'label' => "Порядок отображения атрибутов в конфигураторе",
+                'type'  => 'select_and_order',
+                'options' => $attributes->pluck('name','id')->toArray(),
+                'tab'=>'Порядок отображения'
+            ]
+        ));
 
         Widget::add()->type('script')->content(asset('js/admin/forms/fetchAttributes.js'));
         /**
@@ -202,6 +218,7 @@ class ProductSeriesCrudController extends CrudController
         return $response;
     }
     public function update(){
+
         $response = $this->traitUpdate();
         $series = $this->crud->getCurrentEntry();
         $series->removeAllParams();

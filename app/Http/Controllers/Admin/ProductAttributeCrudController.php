@@ -112,16 +112,31 @@ class ProductAttributeCrudController extends CrudController
                 ],
                 [
                     'name'=>'field_type',
-                    'label'=>'Тип поля',
+                    'label'=>'Укажите как поле будет отображаться на странице редактирования серий и редукторов',
                     'type'=>'select2_from_array',
                     'options'=>[
                         'text'=>'Текстовое поле',
                         'select2'=>'Выбор',
                         'select2_multiple'=>'Выбор нескольких',
                     ],
-                    'wrapper'=>[
-                        'class'=>'col-md-6'
-                    ]
+                    'tab'=>'Функциональное'
+                ],
+                [
+                    'name'=>'show_in_configurator',
+                    'label'=>'Показывать в конфигураторе?',
+                    'type'=>'checkbox',
+                    'tab'=>'Функциональное'
+                ],
+                [
+                    'name'=>'configurator_field_type',
+                    'label'=>'Укажите как поле будет отображаться в конфигураторе',
+                    'type'=>'select2_from_array',
+                    'options'=>[
+                        'radio'=>'Радио кнопка',
+                        'radio_with_svg'=>'Радио кнопка с изображением',
+                        'select'=>'Выбор',
+                    ],
+                    'tab'=>'Функциональное'
                 ],
                 [
                     'name'=>'strAttributes',

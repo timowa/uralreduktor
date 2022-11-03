@@ -28,10 +28,11 @@ class ProductSeries extends Model
     protected $guarded = ['id'];
 
     protected $translatable =['name'];
-    protected $fillable = ['name','category_id','slug'];
-
-    protected $fakeColumns =['_attributes'];
-
+    protected $fillable = ['name','category_id','slug','attributes_order_card','attributes_order_configurator'];
+    protected $casts = [
+        'attributes_order_card'=>'array',
+        'attributes_order_configurator'=>'array'
+    ];
 
     // protected $hidden = [];
     // protected $dates = [];
