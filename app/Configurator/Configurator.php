@@ -14,21 +14,24 @@ class Configurator
     public function __construct(Product $product){
         $this->product = $product;
         $fields = [];
+        $count = 0;
         foreach ($product->getOrderedAttributesForConfigurator() as $key => $data){
             switch ($data['cft']){
                 case 'radio':
-                    $fields[] = RadioField::make($data['name'],'asd',values:$data['value']);
+                    $field = RadioField::make($data['name'],'asd',values:$data['value'])->setIteration($count)->setClickData($data['value']);
                     break;
                 case 'radio_with_svg':
-                    $fields[]= RadioWithSvgField::make($data['name'],'asd',values:$data['value']);
+                    $field= RadioWithSvgField::make($data['name'],'asd',values:$data['value'])->setIteration($count)->setClickData($data['value']);
                     break;
                 case 'select':
-                    $field = SelectField::make($data['name'],'asd',values:$data['value']);
+                    $field = SelectField::make($data['name'],'asd',values:$data['value'])->setIteration($count);
                     if(isset($data['default']))
                         $field = $field->setDefault($data['default']);
-                    $fields[]=$field;
                     break;
             }
+            $fields[]=$field;
+            $count++;
+
         }
         $this->setFields($fields);
     }
@@ -42,6 +45,6 @@ class Configurator
         return $this->fields;
     }
     public function getData(){
-        
+
     }
 }

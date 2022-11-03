@@ -15,6 +15,12 @@ class ConfiguratorField
 
     protected string $field;
 
+    public string $TooltipName;
+
+    public string $activateNextStepName;
+
+    protected array $clickData = [];
+
     protected array $values = [];
 
     protected array $attributes = [];
@@ -59,7 +65,64 @@ class ConfiguratorField
         return $this;
     }
 
+    public function setIteration(int $iteration):static
+    {
+        $this->TooltipName = 'showTooltip'.$iteration;
+        $this->activateNextStepName = 'activateNextStep'.$iteration;
+        $this->listAttributeName = 'listAttributeName'.$iteration;
+        $this->listAttributeValue = 'listAttributeValue'.$iteration;
+        return $this;
+    }
 
+    public function setClickData(array $values):static
+    {
+        $clickData = [];
+        foreach ($values as $value){
+            if(is_array($value)){
+                $clickData[$value['value']] = [
+                    'setup'=>$value['value'],
+                    $this->activateNextStepName()=>true,
+                    $this->tooltipName()=>false,
+                ];
+            }else{
+                $clickData[$value] = [
+                    'setup'=>$value,
+                    $this->activateNextStepName()=>true,
+                    $this->tooltipName()=>false,
+                ];
+            }
+        }
+        $this->clickData = $clickData;
+        return $this;
+    }
+
+
+    public function tooltipName():string
+    {
+        return $this->TooltipName;
+    }
+
+    public function activateNextStepName():string
+    {
+        return $this->activateNextStepName;
+    }
+
+
+
+    public function data(int $id):string
+    {
+        $data = $this->clickData[$id];
+        $str = '';
+        foreach($data as $key=>$value){
+            if(!$value) $value = 'false';
+            else $value = 'true';
+            $str.=$key.' = '.$value.';';
+        }
+        $str=substr($str,0,-1);
+//        $data = str_replace(',',';',str_replace(':',' = ',str_replace('"','',json_encode($data, JSON_NUMERIC_CHECK))));
+
+        return $str;
+    }
     public function values():Collection
     {
         return collect($this->values);

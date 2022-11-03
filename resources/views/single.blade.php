@@ -344,7 +344,9 @@ $meta = '';
     </script>
 
 </main>
-<div class="order-form" :class="{'active': orderForm === true}" x-data="{ nextStep: false, showTooltip1: true, showTooltip2: true, activateCheckbox: false }">
+<div class="order-form" :class="{'active': orderForm === true}" x-data="{@for($i=0;$i<count($configurator->fields());$i++)
+ activateNextStep{{$i}}: false, showTooltip{{$i}}: false, listAttributeName{{$i}}: '', listAttributeValue{{$i}}: '',
+ @endfor nextStep: false,  showTooltip1: true, showTooltip2: true, activateCheckbox: false }">
     <div class="order-form__content" data-simplebar>
         <form action="/makeOrder" id="makeOrder" method="post">
 {{--            <textarea style="display: none" name="details" id="" cols="30" rows="10">{{$product->adminDetails()}}</textarea>--}}
@@ -369,7 +371,9 @@ $meta = '';
                         <input type="checkbox" name="accept" id="accept">
                         <label for="accept" @click="activateCheckbox = true;nextStep = true">Отметьте, если не знаете, что выбрать.</label>
                     </div>
-                    <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn disable" x-bind:class="{ 'active':  }" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true">Следующий шаг</button>
+                    <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn disable" x-bind:class="{ 'active':  @for($i=0;$i<count($configurator->fields());$i++)
+ activateNextStep{{$i}} === true @if($i!=count($configurator->fields())-1) && @endif
+ @endfor}" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true">Следующий шаг</button>
                     <!-- <button type="button" id="nextStep" class="primary-btn order-form__submit-btn order-form__next-step-btn" @click="showTooltip1 = false;showTooltip2 = false;nextStep = true" x-show="activateCheckbox === true">Следующий шаг</button> -->
                 </fieldset>
             </div>
@@ -393,15 +397,21 @@ $meta = '';
                                 <p>Тип передачи</p>
                                 <span>{{$category->name}}</span>
                             </div>
+                            <div class="modalable">
+
+                            </div>
+
                             <svg :class="{'active': toggleDropdownList}" width="16" height="16">
                                 <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#icon-dropdown')}}"></use>
                             </svg>
                         </div>
                         <ul role="list" class="order-form__product-dropdown-list" id="users-list" x-ref="selectDropdownList" x-bind:style="toggleDropdownList === true ? 'height: ' + $refs.selectDropdownList.scrollHeight + 'px' : ''" :class="{'active': toggleDropdownList === true}">
-{{--                            <li>--}}
-{{--                                <p>Расположение осей</p>--}}
-{{--                                <span>{{($product->locationOfAxes===null)? 'Не указано':$product->locationOfAxes->name}}</span>--}}
-{{--                            </li>--}}
+                            @foreach($product->details() as $name => $value)
+                            <li>
+                                <p>{{$name}}</p>
+                                <span>{{$value}}</span>
+                            </li>
+                            @endforeach
 {{--                            <li>--}}
 {{--                                <p>Количество передаточных ступеней</p>--}}
 {{--                                <span>{{ $product->numberOfTransferStages===null? 'Не указано':$product->numberOfTransferStages->name}}</span>--}}

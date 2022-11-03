@@ -2,7 +2,7 @@
 $firstValue = empty($field->default())?$field->values()->first():$field->default();
 @endphp
 <div class="order-form-controls-group order-form-controls-group--not-last" x-show="showFields">
-    <h4 class="order-form-controls-group__title">{{$field->name()}}</h4>
+    <h4 class="order-form-controls-group__title" >{{$field->name()}}</h4>
     <div class="order-form__select-dropdown" x-data="{selectDropdowntext: '{{$firstValue}}', toggleDropdownList: false}">
         <div class="order-form__select-dropdown-top disable" @click="toggleDropdownList = !toggleDropdownList">
             <span x-text="selectDropdowntext === '' ? '{{$firstValue}}' : selectDropdowntext" :class="{'active':selectDropdowntext != ''}" class="active">{{$firstValue}}</span>
@@ -18,7 +18,7 @@ $firstValue = empty($field->default())?$field->values()->first():$field->default
         </select>
         <ul role="list" class="order-form__select-dropdown-list" x-ref="selectDropdownList" x-bind:style="toggleDropdownList === true ? 'height: ' + $refs.selectDropdownList.scrollHeight + 'px' : ''" :class="{'active': toggleDropdownList === true}">
             @foreach($field->values() as $value)
-                <li @click="selectDropdowntext = '{{$value}}';activateNextStep = true" data-select="{{$field->name()}}" data-option="{{$value}}"><span :class="{'active': selectDropdowntext === '{{$value}}'}">{{$value}}</span></li>
+                <li @click="selectDropdowntext = '{{$value}}';{{$field->activateNextStepName()}} = true" data-select="{{$field->name()}}" data-option="{{$value}}"><span :class="{'active': selectDropdowntext === '{{$value}}'}">{{$value}}</span></li>
             @endforeach
         </ul>
     </div>
