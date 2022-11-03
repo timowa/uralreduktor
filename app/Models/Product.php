@@ -43,6 +43,7 @@ class Product extends Model
     protected $casts = [
         'images'=>'array',
         'other_attributes'=>'array',
+        'dimensions'=>'object',
     ];
 
     /*
@@ -65,6 +66,9 @@ class Product extends Model
         else
             return  $this->noImage;
     }
+    public function getSvg($path){
+        echo file_get_contents(asset('storage/'.$path));
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -74,7 +78,7 @@ class Product extends Model
         return $this->belongsTo(ProductSeries::class,'series_id');
     }
     public function category(){
-        return $this->hasManyThrough(ProductCategory::class,ProductSeries::class,'series_id','category_id');
+        return $this->hasOneThrough(ProductCategory::class,ProductSeries::class,'id','id','series_id','category_id');
     }
     public function strAttributes(){
         return $this->morphedByMany(StringAttribute::class,'productable','attribute_value_product','product_id');

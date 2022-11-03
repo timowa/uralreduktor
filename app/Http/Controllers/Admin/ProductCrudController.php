@@ -91,9 +91,9 @@ class ProductCrudController extends CrudController
             'type'  => 'tinymce',
             'options'=>[
                 'plugins'=>'code table lists',
-                'toolbar'=>'undo redo | alignleft aligncenter alignright | styles | bold italic | link image | bullist | code | removeformat',
+                'newline_behavior ' => 'linebreak',
+                'toolbar'=>'formatselect | fontsizeselect | undo redo | alignleft aligncenter alignright | styles | bold italic | link image | bullist | code | removeformat | lineheight',
                 'menubar'=>false,
-                'valid_elements'=> 'p,ul,li,a[href|target=_blank],strong/b'
             ],
         ];
         if($tab){
@@ -173,25 +173,11 @@ class ProductCrudController extends CrudController
               'sortable'=>true
           ],
 
-
-            [
-                'name'=>'description',
-                'label'=>'Описание',
-                'type'=>'repeatable',
-                'subfields'=>[
-                    [
-                        'name'=>'title',
-                        'label'=>'Подзаголовок'
-                    ],
-                    $this->createTiny('Контент','content')
-                ],
-                'max_rows' => 4,
-                'tab'=>'Описание'
-            ],
-//            $this->createTiny('Примечание','product_characteristics','Характеристики'),
+            $this->createTiny('Описание','description','Описание'),
+            $this->createTiny('Характеристики','product_characteristics','Характеристики'),
             [
                 'name'=>'dimensions',
-                'label'=>'Габариты',
+                'label'=>'Размеры',
                 'type'=>'repeatable',
                 'subfields'=>[
                     [
@@ -204,8 +190,8 @@ class ProductCrudController extends CrudController
                         'type'=>'browse',
                     ]
                 ],
-                'max_rows' => 5,
-                'tab'=>'Габариты'
+                'max_rows' => 10,
+                'tab'=>'Размеры'
             ],
         ));
         $attributes = ProductAttribute::get();
@@ -243,9 +229,9 @@ class ProductCrudController extends CrudController
 
             $field = [
                 'label'=>$attribute->name,
-                'tab'=>'Характеристики'
+                'tab'=>'Атрибуты'
             ];
-            if(empty($options)){
+            if(empty($options) && $attribute->field_type != 'text'){
                 $field['attributes']['hidden-by-default'] = '';
             }
             if($attribute->field_type != 'text'){
@@ -272,7 +258,12 @@ class ProductCrudController extends CrudController
                         'allows_multiple'=>false,
                         'label'=>$attribute->name.' по умолчанию',
                         'allows_null'=>false,
+                        'fake'=>true,
+                        'store_in'=>'other_attributes',
                     ]);
+                    if(isset($product->other_attributes['default_'.$attribute->id])){
+                        $fieldForDefault['value']=$product->other_attributes['default_'.$attribute->id];
+                    }
                     $fields[] = $fieldForDefault;
                 }
             }else{
@@ -295,6 +286,31 @@ class ProductCrudController extends CrudController
          */
         Widget::add()->type('script')->content(asset('js/admin/forms/fetchAttributesBySeries.js'));
 
+    }
+
+    public static function addDimensionsField(){
+        ob_start();
+        CRUD::addField(
+            [
+                'name'=>'dimensions',
+                'label'=>'Размеры',
+                'type'=>'repeatable',
+                'subfields'=>[
+                    [
+                        'name'=>'title',
+                        'label'=>'Подзаголовок'
+                    ],
+                    [
+                        'name'=>'content',
+                        'label'=>'Изображение',
+                        'type'=>'browse',
+                    ]
+                ],
+                'max_rows' => 5,
+                'tab'=>'Размеры'
+            ]
+        );
+        return ob_get_clean();
     }
 
     /**

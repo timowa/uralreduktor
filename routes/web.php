@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +13,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/clear', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    return "Кэш очищен.";
+});
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/catalog',[PageController::class,'catalog']);
+Route::get('/{catSlug}/{pSlug}',[PageController::class,'single']);
