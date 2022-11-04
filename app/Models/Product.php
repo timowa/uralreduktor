@@ -39,7 +39,7 @@ class Product extends Model
      protected $fillable = ['description','product_characteristics','dimensions','images','name','slug','series_id','other_attributes'];
     protected $noImage = 'uploads/products/no-image.png';
      // protected $hidden = [];
-     protected $fakeColumns = ['other_attributes'];
+     protected $fakeColumns = ['other_attributes','dimensions'];
     protected $casts = [
         'images'=>'array',
         'other_attributes'=>'array',

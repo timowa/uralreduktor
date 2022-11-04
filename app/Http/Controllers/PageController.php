@@ -76,29 +76,45 @@ class PageController extends Controller
         }
         return $filter;
     }
-    public function catalog(CatalogFilter $filter){
+    public function catalog(Request $request,CatalogFilter $filter){
         $search= '/catalog';
         $search1= '/catalog';
         $meta=collect(DB::table('meta_pages')->where('meta_url','LIKE',"%{$search}%")->orWhere('meta_url','LIKE',"%{$search1}%")->get()[0]);
-        $series = ProductSeries::all();
         $products = Product::filter($filter);
         $pageFilter = $this->createFilter($products);
         $products= $products->paginate(12);
-        return view('catalog',compact('meta','products','series','pageFilter'));
+        return view('catalog',compact('meta','products','pageFilter'));
+    }
+    public function category(Request $request,CatalogFilter $filter, $catSlug = null){
+        $category = ProductCategory::where('slug',$catSlug)->first();
+        abort_if(is_null($catSlug) || is_null($category),404);
+        $search= '/catalog/'.$category->slug;
+        $search1= '/catalog/'.$category->slug;
+        $meta=collect(DB::table('meta_pages')->where('meta_url','LIKE',"%{$search}%")->orWhere('meta_url','LIKE',"%{$search1}%")->get());
+        $products = $category->products()->filter($filter);
+        $series = $category->series;
+        $pageFilter = $this->createFilter($products);
+        $products= $products->paginate(12);
+        if($request->ajax()){
+            return response()->json([
+                'mainList'=>view('parts.catalog-list',compact('products'))->render()
+            ]);
+        }
+        return view('category',compact('meta','products','series','pageFilter','category'));
     }
     public function single($catSlug,$pSlug){
         $meta=collect(DB::table('meta_pages')->where('meta_url','LIKE',"%{$_SERVER['REQUEST_URI']}%")->orWhere('meta_url','LIKE',"%{$_SERVER['REQUEST_URI']}%")->get());
         $category = ProductCategory::where('slug',$catSlug)->first();
         $product = Product::where('slug',$pSlug)->first();
         abort_if(is_null($category) || is_null($product) || $product->category->slug != $catSlug,404);
-
-        return view('single',compact('meta','product','quest','category'));
+        $configurator = new Configurator($product);
+        $quest = collect()->paginate(13);
+        return view('single',compact('meta','product','quest','category','configurator'));
     }
     public function parser(){
         return view('parser');
 
         $quest = collect()->paginate(3);
-        $configurator = new Configurator($product);
         return view('single',compact('meta','product','quest','category','configurator'));
 
 

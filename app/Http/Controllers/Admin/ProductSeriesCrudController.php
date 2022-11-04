@@ -187,7 +187,7 @@ class ProductSeriesCrudController extends CrudController
                 'name'  => 'attributes_order_configurator',
                 'label' => "Порядок отображения атрибутов в конфигураторе",
                 'type'  => 'select_and_order',
-                'options' => $attributes->pluck('name','id')->toArray(),
+                'options' => $attributes->whereNotNull('configurator_field_type')->pluck('name','id')->toArray(),
                 'tab'=>'Порядок отображения'
             ]
         ));

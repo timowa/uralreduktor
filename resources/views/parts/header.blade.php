@@ -94,10 +94,8 @@
         <nav class="header__dropdown-menu-wrapper" x-show="headerSubMenu" x-transition.origin.top.left.duration.300ms style="display:none;" @mouseover="headerSubMenu = true">
           <ul class="header__dropdown-menu" role="list">
             @foreach($globalCategories as $category)
-            <li><a href="/catalog?typeOfTransmission={{$category->id}}">
-                <svg width="68" height="48">
-                  <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#'.$category->icon)}}"></use>
-                </svg>
+            <li><a href="{{route('categoryPage',$category->slug)}}">
+                {!!file_get_contents(asset('storage/'.$category->icon))!!}
                 <span>
                   @if(str_contains($category->name,'редукторы'))
                   {{$category->name}}

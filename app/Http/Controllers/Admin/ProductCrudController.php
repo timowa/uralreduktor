@@ -182,7 +182,15 @@ class ProductCrudController extends CrudController
             $this->createTiny('Описание','description','Описание'),
             $this->createTiny('Характеристики','product_characteristics','Характеристики'),
             [
-                'name'=>'dimensions',
+                'name'=>'reducer',
+                'label'=>'Чертеж редуктора',
+                'type'=>'browse',
+                'fake'=>true,
+                'store_in'=>'dimensions',
+                'tab'=>'Чертежи',
+            ],
+            [
+                'name'=>'shafts',
                 'label'=>'Размеры',
                 'type'=>'repeatable',
                 'subfields'=>[
@@ -197,7 +205,17 @@ class ProductCrudController extends CrudController
                     ]
                 ],
                 'max_rows' => 10,
-                'tab'=>'Размеры'
+                'tab'=>'Чертежи',
+                'fake'=>true,
+                'store_in'=>'dimensions'
+            ],
+            [
+                'name'=>'buildOptions',
+                'label'=>'Варианты сборки',
+                'type'=>'browse',
+                'fake'=>true,
+                'store_in'=>'dimensions',
+                'tab'=>'Чертежи',
             ],
         ));
         $attributes = ProductAttribute::get();

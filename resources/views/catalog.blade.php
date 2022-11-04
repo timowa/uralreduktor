@@ -41,8 +41,56 @@
                         @include('templates.filters.catalog',['filter'=>$pageFilter])
 
                     </nav>
+
                 </aside>
-                @include('parts.catalog-list')
+                <div class="catalog__main">
+                    <div class="catalog__main-btn-group">
+                        <button class="filter-btn catalog-filter-btn" type="button" @click="filter = true"><svg width="68" height="48">
+                                <use xlink:href="{{asset('resources/svgSprites/svgSprite.svg#filter-btn-icon')}}"></use>
+                            </svg>Фильтры</button>
+                    </div>
+                    @include('templates.filters.catalog-mobile')
+                    @include('parts.catalog-list')
+                    {{--        @if($products->total() == 0)--}}
+                    {{--            <div class="no-catalog-products-message">--}}
+                    {{--                <p>По заданным фильтрам нет редукторов</p>--}}
+                    {{--                <img loading="lazy" decoding="async" src="{{asset('uploads/no-catalog-products-img.png')}}" alt="image" width="308" height="249">--}}
+                    {{--            </div>--}}
+                    {{--        @endif--}}
+                    <ul class="pagination catalog-pagination" role="list">
+                        {{$products->withQueryString()->links('vendor.pagination.semantic-ui')}}
+                    </ul>
+
+                    <script>
+                        {{--var disabled_locations = [] = {{(request() -> has('typeOfTransmission')) ? $categories -> where('id', request() -> get('typeOfTransmission')) -> first() -> locations -> pluck('id'): '[]'}};--}}
+                        {{--var disabled_types = [] = {{(request() -> has('locationOfAxes')) ? $categories -> where('id', request() -> get('locationOfAxes')) -> first() -> locations -> pluck('id'): '[]'}};--}}
+
+                        // $('#filter1 li').each(function() {
+                        //
+                        //     var input = $(this).find('input'),
+                        //         button = $(this).find('button');
+                        //     if ($.inArray(parseInt(input.val()), disabled_types) !== -1) {
+                        //         button.prop('disabled', false)
+                        //     } else {
+                        //         button.prop('disabled', true)
+                        //
+                        //     }
+                        // })
+
+                        // $('#filter2 li').each(function() {
+                        //
+                        //     var input = $(this).find('input'),
+                        //         button = $(this).find('button');
+                        //     if ($.inArray(parseInt(input.val()), disabled_locations) !== -1) {
+                        //         button.prop('disabled', false)
+                        //     } else {
+                        //         button.prop('disabled', true)
+                        //
+                        //     }
+                        // })
+                    </script>
+                </div>
+
             </div>
         </section>
         <script>

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;

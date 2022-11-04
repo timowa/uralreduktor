@@ -44,6 +44,9 @@ class ProductCategory extends Model
     public function attributes(){
         return $this->belongsToMany(ProductAttribute::class,'attribute_category','category_id','attribute_id');
     }
+    public function products(){
+        return $this->hasManyThrough(Product::class,ProductSeries::class,'category_id','series_id');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

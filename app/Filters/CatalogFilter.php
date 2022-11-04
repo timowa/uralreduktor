@@ -57,4 +57,13 @@ class CatalogFilter extends QueryFilter
         }
 
     }
+
+    public function series($name = null){
+        return $this->builder->when($name, function($query) use($name){
+            $query->whereHas('series',function($q) use($name){
+                $q->where('slug',$name);
+            });
+
+        });
+    }
 }

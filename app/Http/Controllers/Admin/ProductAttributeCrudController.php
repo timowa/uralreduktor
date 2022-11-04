@@ -96,6 +96,7 @@ class ProductAttributeCrudController extends CrudController
                     'label'=>'Можно указать значение по умолчанию',
                     'type'=>'checkbox',
                     'name'=>'has_default_value',
+                    'tab'=>'Функциональное'
                 ],
                 [
                     'name'=>'attribute_type',
@@ -125,6 +126,7 @@ class ProductAttributeCrudController extends CrudController
                     'name'=>'show_in_configurator',
                     'label'=>'Показывать в конфигураторе?',
                     'type'=>'checkbox',
+                    'default'=> !($this->crud->getCurrentEntry()) || !is_null($this->crud->getCurrentEntry()->configurator_field_type),
                     'tab'=>'Функциональное'
                 ],
                 [
@@ -181,4 +183,21 @@ class ProductAttributeCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+    public function store(){
+        $display_in_configurator = $this->crud->getRequest()->request->get('show_in_configurator');
+        $response = $this->traitStore();
+        if(!$display_in_configurator){
+            $this->crud->entry->update(['configurator_field_type' => null]);
+        }
+
+        return $response;
+    }
+    public function update(){
+        $display_in_configurator = $this->crud->getRequest()->request->get('show_in_configurator');
+        $response = $this->traitUpdate();
+        if(!$display_in_configurator){
+            $this->crud->entry->update(['configurator_field_type' => null]);
+        }
+        return $response;
+    }
 }

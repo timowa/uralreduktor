@@ -225,19 +225,33 @@ $meta = '';
                         {!! $product->product_characteristics !!}
                 </div>
                 @endif
-
+                @if(!empty($product->dimensions))
                 <div class="product-card-info product-card__sizes" id="productCardSizes">
-                    <ul role="list" class="product-card__sizes-list">
-
-                    @foreach($product->dimensions as $dimension)
-                        <li>
-                            <h4>{{$dimension->title}}</h4>
-                            {{$product->getSvg($dimension->content)}}
-                        </li>
+                    @if(isset($product->dimensions->reducer))
+                        <h4>Чертеж редуктора</h4>
+                    <div class="product-card__sizes-big-svg">
+                        {{$product->getSvg($product->dimensions->reducer)}}
+                    </div>
+                    @endif
+                    @if(isset($product->dimensions->shafts))
+                        <h4>Присоединительные размеры входных и выходных валов:</h4>
+                        <ul role="list" class="product-card__sizes-list">
+                        @foreach($product->dimensions->shafts as $dimension)
+                            <li>
+                                <h4>{{$dimension->title}}</h4>
+                                {{$product->getSvg($dimension->content)}}
+                            </li>
                         @endforeach
-
-                    </ul>
+                        </ul>
+                    @endif
+                    @if(isset($product->dimensions->buildOptions))
+                        <h4>Варианты сборки</h4>
+                        <div class="product-card__sizes-big-svg">
+                            {{$product->getSvg($product->dimensions->buildOptions)}}
+                        </div>
+                    @endif
                 </div>
+                @endif
                 <div class="product-card-info product-card__question-answer" id="productCardQuestionAnswer">
                     <div class="product-card__question-answer-top">
                         <h3>Нужно больше информации?</h3>
