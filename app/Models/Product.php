@@ -69,6 +69,39 @@ class Product extends Model
     public function getSvg($path){
         echo file_get_contents(asset('storage/'.$path));
     }
+    public function getOrderedAttributesForCard(){
+        $order = $this->series->attributes_order_card;
+        $attributes = $this->attributes();
+        if(is_null($order)) return $attributes;
+        $newAttributes = [];
+        foreach($order as $value){
+            if(isset($attributes[$value]))
+            $newAttributes[$value]=$attributes[$value];
+        }
+        return $newAttributes;
+    }
+    public function getOrderedAttributesForConfigurator(){
+        $order = $this->series->attributes_order_configurator;
+        $attributes = $this->attributes();
+        if(is_null($order)) return $attributes;
+        $newAttributes = [];
+        foreach($order as $value){
+            if(isset($attributes[$value]))
+                $newAttributes[$value]=$attributes[$value];
+        }
+        return $newAttributes;
+    }
+    public function details(){
+        $attributes = $this->getOrderedAttributesForCard();
+        $details = [];
+        foreach ($attributes as $attribute){
+            if(is_array($attribute['value'])){
+                $attribute['value'] = 'от '.$attribute['value'][0].' до '.$attribute['value'][array_key_last($attribute['value'])];
+            }
+            $details[$attribute['name']]=$attribute['value'];
+        }
+        return $details;
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

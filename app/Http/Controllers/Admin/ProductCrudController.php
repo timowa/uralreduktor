@@ -61,10 +61,11 @@ class ProductCrudController extends CrudController
             }
         }
         $attributes = DB::table('attribute_value_series')->where('series_id',$request->id)->pluck('attribute_id')->countBy()->keys();
-        dd($series->attributes());
+//        dd($series->attributes());
         foreach ($attributes as $attribute){
             $strAttributes = $series->strAttributes()->where('attribute_id',$attribute)->get();
             $numAttributes = $series->numAttributes()->where('attribute_id',$attribute)->get();
+            $svgAttributes = $series->svgAttributes()->where('attribute_id',$attribute)->get();
             if($strAttributes->isNotEmpty()){
                 foreach ($strAttributes as $item){
                     $result[$attribute][$item->id]=$item->value;
@@ -72,6 +73,11 @@ class ProductCrudController extends CrudController
             }
             if($numAttributes->isNotEmpty()){
                 foreach ($numAttributes as $item){
+                    $result[$attribute][$item->id]=$item->value;
+                }
+            }
+            if($svgAttributes->isNotEmpty()){
+                foreach ($svgAttributes as $item){
                     $result[$attribute][$item->id]=$item->value;
                 }
             }
@@ -231,9 +237,7 @@ class ProductCrudController extends CrudController
                 'label'=>$attribute->name,
                 'tab'=>'Атрибуты'
             ];
-            if(empty($options) && $attribute->field_type != 'text'){
-                $field['attributes']['hidden-by-default'] = '';
-            }
+
             if($attribute->field_type != 'text'){
                 $field = $field + [
                         'options'=>$options,
@@ -273,6 +277,9 @@ class ProductCrudController extends CrudController
                     'store_in'=>'other_attributes',
                     'placeholder'=>'Написать'
                     ];
+            }
+            if(empty($options) && $attribute->field_type != 'text'){
+                $field['attributes']['hidden-by-default'] = '';
             }
             $fields[] = $field;
 

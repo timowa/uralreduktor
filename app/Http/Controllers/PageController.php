@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Filters\CatalogFilter;
+
+use App\App;
+use App\Configurator\Configurator;
+
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductCategory;
@@ -85,12 +90,17 @@ class PageController extends Controller
         $meta=collect(DB::table('meta_pages')->where('meta_url','LIKE',"%{$_SERVER['REQUEST_URI']}%")->orWhere('meta_url','LIKE',"%{$_SERVER['REQUEST_URI']}%")->get());
         $category = ProductCategory::where('slug',$catSlug)->first();
         $product = Product::where('slug',$pSlug)->first();
-        $quest = collect()->paginate(3);
         abort_if(is_null($category) || is_null($product) || $product->category->slug != $catSlug,404);
+
         return view('single',compact('meta','product','quest','category'));
     }
     public function parser(){
         return view('parser');
+
+        $quest = collect()->paginate(3);
+        $configurator = new Configurator($product);
+        return view('single',compact('meta','product','quest','category','configurator'));
+
 
     }
     //single

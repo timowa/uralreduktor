@@ -3982,6 +3982,11 @@ ul.product-card__sizes-list li {
 	min-height: 28px;
 	transition: 0.3s ease-in-out;
 }
+.order-form-controls-group__radio-list .order-form-controls-group__variant-btn {
+    min-width: 60px;
+    min-height: 60px;
+    padding: 10px;
+}
 .order-form-controls-group__radio-list li:hover:not(.disabled),
 .order-form-controls-group__radio-list li.active {
 	border-color: var(--primary-color);
@@ -4006,6 +4011,10 @@ ul.product-card__sizes-list li {
 	font-size: 16px;
 	line-height: 20px;
 	color: var(--dark-color);
+}
+.order-form-controls-group__radio-list svg {
+    width: 40px;
+    height: 40px;
 }
 .order-form .g-recaptcha {
 	margin-bottom: 1rem;
