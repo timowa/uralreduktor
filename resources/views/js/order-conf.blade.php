@@ -5,34 +5,34 @@
         $('#productCardSizes').find('img').attr('decoding','async')
         $('#productCardSizes').find('img').attr('width','550')
         $('#productCardSizes').find('img').attr('height','224')
-        $('form').on('submit',function(e){
-            var form = $(this)
+        // $('form').on('submit',function(e){
+        //     var form = $(this)
             //   if(form.attr('id')==="makeOrder"){
             //       var detailsText = form.find('textarea[name="details"]')
             //       $.eaech(details,function(key,value){
             //           detailsText.append('<li><span>'+key+'</span>:<b>'+value+'</b></li>')
             //       })
             //   }
-            e.preventDefault()
+            // e.preventDefault()
             // var formData = new FormData($(this))
-            $.ajax({
-                type:'post',
-                url:"/checkCaptcha",
-                data:$(this).serialize(),
-                success:function(data){
-                    if(data==="success"){
-                        form.unbind('submit')
-                        form.submit()
-                        form.trigger('reset')
-                    }else{
-                        alert('Сначала подтвердите что вы не робот')
-                    }
-                },
-                error:function(data){
-                    alert('Пока что это невозможно. Попробуйте позже')
-                }
-            })
-        })
+            // $.ajax({
+            //     type:'post',
+            //     url:"/checkCaptcha",
+            //     data:$(this).serialize(),
+            //     success:function(data){
+            //         if(data==="success"){
+            //             form.unbind('submit')
+            //             form.submit()
+            //             form.trigger('reset')
+            //         }else{
+            //             alert('Сначала подтвердите что вы не робот')
+            //         }
+            //     },
+            //     error:function(data){
+            //         alert('Пока что это невозможно. Попробуйте позже')
+            //     }
+            // })
+        // })
         // $('input#orderFormTel').mask("8(999) 999-9999",{ completed:function(){$(this).parent().addClass('correct')}});
         $('textarea').on('input',function(){
             var value = $(this).val()
@@ -128,9 +128,9 @@
             }else{
                 $(this).find('button[type="submit"]').prop('disabled',false)
             }
-            if($('.recaptcha-checkbox').data('aria-checked')===false){
-                valid = false;
-            }
+            // if($('.recaptcha-checkbox').data('aria-checked')===false){
+            //     valid = false;
+            // }
             generateTitle()
         })
 

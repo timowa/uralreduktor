@@ -15,6 +15,7 @@ use App\Models\ProductSeries;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
@@ -118,6 +119,24 @@ class PageController extends Controller
         return view('single',compact('meta','product','quest','category','configurator'));
 
 
+    }
+
+    public function makeOrder(Request $request){
+        $order = [
+            'product_name'=>$request->product_name,
+            'uri'=>url()->previous(),
+            'user_name'=>$request->user_name,
+            'user_email'=>$request->user_email,
+            'user_phone'=>$request->user_phone,
+            'user_comment'=>$request->user_comment,
+        ];
+        $attributes = Product::find(5)->first()->getOrderedAttributesForConfigurator();
+        $order_attr = [];
+        foreach ($attributes as $id=>$attribute){
+            $order_attr[$attribute['name']]=$request->{'attr_'.$id}??'-';
+        }
+        $order['content'] = json_encode($order_attr,JSON_UNESCAPED_UNICODE);
+        dd($order);
     }
     //single
 

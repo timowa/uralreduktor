@@ -13,11 +13,13 @@ class ConfiguratorField
 {
     protected string $label;
 
-    protected string $field;
+    protected int $id;
 
     public string $TooltipName;
 
     public string $activateNextStepName;
+
+    protected int $attribute_id;
 
     protected array $clickData = [];
 
@@ -29,9 +31,9 @@ class ConfiguratorField
 
     protected static string $type = 'radio';
 
-    public function __construct(string $label,string $field, array $values){
+    public function __construct(string $label,int $id, array $values){
         $this->setLabel($label);
-        $this->setField($field);
+        $this->setId($id);
         $this->setValues($values);
     }
 
@@ -47,9 +49,9 @@ class ConfiguratorField
         return $this;
     }
 
-    public function setField( string $field):static
+    public function setId( int $id):static
     {
-        $this->field = $field;
+        $this->id = $id;
         return $this;
     }
 
@@ -62,6 +64,12 @@ class ConfiguratorField
     public function setAttributes( array $attributes):static
     {
         $this->attributes = $attributes;
+        return $this;
+    }
+
+    public function setAttributeId( int $id):static
+    {
+        $this->attribute_id = $id;
         return $this;
     }
 
@@ -132,10 +140,15 @@ class ConfiguratorField
     {
         return $this->attributes[$name]??'';
     }
-    public function field():string
+
+    public function attribute_id():int
     {
-        return $this->field;
+        return $this->attribute_id;
     }
+//    public function field():string
+//    {
+//        return $this->field;
+//    }
     public function type():string
     {
         return static::$type;
@@ -150,9 +163,14 @@ class ConfiguratorField
         return (string) $this->label;
     }
 
+    public function inputName():string
+    {
+        return (string) 'attr_'.$this->id;
+    }
+
     public function id(string $value = null):string
     {
-        return (string) str($this->field())
+        return (string) str($this->type())
             ->prepend('conf_')
             ->when($value, fn(Stringable $str) => $str->append("_$value"));
     }

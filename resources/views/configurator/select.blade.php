@@ -11,7 +11,7 @@ $firstValue = empty($field->default())?$field->values()->first():$field->default
             </svg>
         </div>
 
-        <select name="{{$field->name()}}" style="display: none">
+        <select name="{{$field->inputName()}}" style="display: none">
             @foreach($field->values() as $value)
                 <option value="{{$value}}" @selected($value==$firstValue)>{{$value}}</option>
             @endforeach

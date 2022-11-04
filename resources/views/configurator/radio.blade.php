@@ -12,7 +12,7 @@
     <ul class="order-form-controls-group__radio-list" role="list" x-data="{setup: ''}">
         @foreach($field->values() as $value)
             <li :class="{'active': setup === {{$value}}}" @click="{{$field->data($value)}}">
-                <input type="radio" name="{{$field->name()}}" value="{{$value}}" id="{{$field->id()}}" data-name="{{$value}}">
+                <input type="radio" name="{{$field->inputName()}}" value="{{$value}}" id="{{$field->id()}}" data-name="{{$value}}">
                 <label for="{{$field->id()}}">{{$value}}</label>
             </li>
         @endforeach

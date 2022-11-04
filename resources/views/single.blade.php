@@ -365,7 +365,7 @@ $meta = '';
         <form action="/makeOrder" id="makeOrder" method="post">
 {{--            <textarea style="display: none" name="details" id="" cols="30" rows="10">{{$product->adminDetails()}}</textarea>--}}
             <input type="hidden" name="product_name" value="{{$product->name}}">
-            <input type="hidden" name="uri" value="{{url()->current()}}">
+            <input type="hidden" name="product_id" value="{{$product->id}}">
             @csrf
             <div class="order-form__step-page order-form__step-page-1" x-data="{ showFields: true }">
                 <div class="order-form__step-top">
@@ -503,7 +503,7 @@ $meta = '';
                         <label for="acceptPolicy"><a href="#">Подтверждаю согласие с политикой конфиденциальности</a></label>
                     </div>
 {{--                    {!! Captcha::display($attributes) !!}--}}
-                    <button type="submit" class="primary-btn order-form__submit-btn">Отправить заявку</button>
+                    <button type="submit" class="primary-btn order-form__submit-btn" @click="console.log('click')">Отправить заявку</button>
                 </fieldset>
             </div>
         </form>

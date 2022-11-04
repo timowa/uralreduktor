@@ -18,13 +18,13 @@ class Configurator
         foreach ($product->getOrderedAttributesForConfigurator() as $key => $data){
             switch ($data['cft']){
                 case 'radio':
-                    $field = RadioField::make($data['name'],'asd',values:$data['value'])->setIteration($count)->setClickData($data['value']);
+                    $field = RadioField::make($data['name'],$key,values:$data['value'])->setIteration($count)->setClickData($data['value']);
                     break;
                 case 'radio_with_svg':
-                    $field= RadioWithSvgField::make($data['name'],'asd',values:$data['value'])->setIteration($count)->setClickData($data['value']);
+                    $field= RadioWithSvgField::make($data['name'],$key,values:$data['value'])->setIteration($count)->setClickData($data['value']);
                     break;
                 case 'select':
-                    $field = SelectField::make($data['name'],'asd',values:$data['value'])->setIteration($count);
+                    $field = SelectField::make($data['name'],$key,values:$data['value'])->setIteration($count);
                     if(isset($data['default']))
                         $field = $field->setDefault($data['default']);
                     break;

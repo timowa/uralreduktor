@@ -8,9 +8,9 @@ class SelectField extends ConfiguratorField
 
     protected  string $default;
 
-    public function __construct(string $label,string $field, array $values){
+    public function __construct(string $label,int $id, array $values){
         $this->setLabel($label);
-        $this->setField($field);
+        $this->setId($id);
         $this->setValues($values);
     }
 

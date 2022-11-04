@@ -27,3 +27,4 @@ Route::get('/catalog',[PageController::class,'catalog']);
 Route::get('/catalog/{catSlug}',[PageController::class,'category'])->name('categoryPage');
 Route::get('/{catSlug}/{pSlug}',[PageController::class,'single'])->name('productPage');
 Route::get('/parser',[PageController::class,'parser']);
+Route::post('/makeOrder',[PageController::class,'makeOrder']);
