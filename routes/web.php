@@ -24,4 +24,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/catalog',[PageController::class,'catalog']);
+Route::get('/parser',[PageController::class,'parser']);
 Route::get('/{catSlug}/{pSlug}',[PageController::class,'single']);

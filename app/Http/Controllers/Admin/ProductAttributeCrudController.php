@@ -84,7 +84,7 @@ class ProductAttributeCrudController extends CrudController
                     'name'  => 'slug',
                     'target'  => 'name', // will turn the title input into a slug
                     'label' => "Slug",
-                    'type'  => 'slug',
+                    'type'  => 'slug1',
                     'wrapper'=>[
                         'class'=>'col-lg-6'
                     ],

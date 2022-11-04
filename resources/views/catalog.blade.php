@@ -38,7 +38,7 @@
                 <aside class="catalog__aside">
                     <nav class="filter filter--desktop" x-data="{filterDropdown1: $persist(''), filterDropdown2: $persist(''), filterDropdown3: $persist(''), filterDropdown4: $persist('') }">
 
-{{--                            @include('templates.filters.catalog',[$attr1,$attr2,$attr3,$attr4,'route'=>'/catalog',$gearRatioRange,$torqueRange])--}}
+                        @include('templates.filters.catalog',['filter'=>$pageFilter])
 
                     </nav>
                 </aside>
@@ -60,26 +60,26 @@
     $('.filter__submit-btn').on('click',function(e){
         e.preventDefault()
         var form = $(this).closest('form'),
-            gearRatioInput = form.find('input[name="gearRatio"]'),
-            gearRatioRange = gearRatioInput.val().split(';'),
-            gearRatioMaxValue= gearRatioInput.attr('data-max'),
-            gearRatioMinValue= gearRatioInput.attr('data-min'),
-            torqueInput = form.find('input[name="torque"]'),
-            torqueRange = torqueInput.val().split(';'),
-            torqueMaxValue = torqueInput.attr('data-max'),
-            torqueMinValue = torqueInput.attr('data-min'),
-            typeOfTransmissionValue = form.find('input[name="typeOfTransmission"]:checked').val();
-        console.log(typeOfTransmissionValue)
+            krutyaschiiMoment = form.find('input[name="krutyaschii-moment"]'),
+            gearRatioRange = krutyaschiiMoment.val().split(';'),
+            gearRatioMaxValue= krutyaschiiMoment.attr('data-max'),
+            gearRatioMinValue= krutyaschiiMoment.attr('data-min'),
+            peredatochnoeOtnoshenie = form.find('input[name="peredatochnoe-otnoshenie"]'),
+            torqueRange = peredatochnoeOtnoshenie.val().split(';'),
+            torqueMaxValue = peredatochnoeOtnoshenie.attr('data-max'),
+            torqueMinValue = peredatochnoeOtnoshenie.attr('data-min'),
+            tipPeredachiValue = form.find('input[name="tip-peredachi"]:checked').val();
+        console.log(tipPeredachiValue)
         if(gearRatioRange[0] == gearRatioMinValue && gearRatioRange[1] == gearRatioMaxValue){
-            gearRatioInput.prop('disabled',true)
+            krutyaschiiMoment.prop('disabled',true)
         }
         if(torqueRange[0] == torqueMinValue && torqueRange[1] == torqueMaxValue){
-            torqueInput.prop('disabled',true)
+            peredatochnoeOtnoshenie.prop('disabled',true)
         }
-        if($.urlParam('typeOfTransmission') != typeOfTransmissionValue && $.urlParam('typeOfTransmission') !=0 && typeOfTransmissionValue !=''){
-            gearRatioInput.prop('disabled',true)
-            torqueInput.prop('disabled',true)
-            console.log(typeOfTransmissionValue)
+        if($.urlParam('tip-peredachi') != tipPeredachiValue && $.urlParam('tip-peredachi') !=0 && tipPeredachiValue !=''){
+            krutyaschiiMoment.prop('disabled',true)
+            peredatochnoeOtnoshenie.prop('disabled',true)
+            console.log(tipPeredachiValue)
         }
         form.submit()
     })
@@ -99,24 +99,24 @@
         filterProducts(false, params1);
     }
     function filterProducts(changeType = false,params){
-        var typeOfTransmission = $('.filterCatalog input[name="typeOfTransmission"]:checked').val(),
-            locationOfAxes = $('.filterCatalog input[name="locationOfAxes"]:checked').val(),
-            gearRatioInput = $('.filterCatalog input[name="gearRatio"]'),
-            gearRatio =gearRatioInput.val().split(';'),
-            torqueInput = $('.filterCatalog input[name="torque"]'),
-            torque = torqueInput.val().split(';'),
+        var tipPeredachi = $('.filterCatalog input[name="tipPeredachi"]:checked').val(),
+            raspolozhenieOsej = $('.filterCatalog input[name="raspolozhenieOsej"]:checked').val(),
+            krutyaschiiMoment = $('.filterCatalog input[name="krutyaschijMoment"]'),
+            gearRatio =krutyaschiiMoment.val().split(';'),
+            peredatochnoeOtnoshenie = $('.filterCatalog input[name="peredatochnoeOtnoshenie"]'),
+            torque = peredatochnoeOtnoshenie.val().split(';'),
             get = '',
             data = {
-                typeOfTransmission: typeOfTransmission,
-                locationOfAxes: locationOfAxes,
+                tipPeredachi: tipPeredachi,
+                raspolozhenieOsej: raspolozhenieOsej,
             },
             gearRationRange = {
-                'min': gearRatioInput.attr('data-min'),
-                'max': gearRatioInput.attr('data-max')
+                'min': krutyaschiiMoment.attr('data-min'),
+                'max': krutyaschiiMoment.attr('data-max')
             },
             torqueRange = {
-                'min':torqueInput.attr('data-min'),
-                'max':torqueInput.attr('data-max')
+                'min':peredatochnoeOtnoshenie.attr('data-min'),
+                'max':peredatochnoeOtnoshenie.attr('data-max')
             }
 
         if(gearRatio[0] != gearRationRange["min"] || gearRatio[1]!=gearRationRange["max"]){
@@ -134,9 +134,9 @@
             console.log('no-params')
         }
         if(changeType===true){
-            delete data['locationOfAxes']
-            delete data['gearRatio']
-            delete data['torque']
+            delete data['raspolozhenieOsej']
+            delete data['krutyaschijMoment']
+            delete data['peredatochnoeOtnoshenie']
             $('#filter2 input[type="radio"]:checked').prop('checked',false)
         }
 
@@ -243,7 +243,7 @@
         onFinish: filterProducts,
         onUpdate: filterProducts
     });
-    // $('.js-range-slider').on('onFinish',filterProducts)
+    $('.js-range-slider').on('onFinish',filterProducts)
 
 
     $(".js-range-slider").on("change", function () {
