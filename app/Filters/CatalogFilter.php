@@ -10,7 +10,7 @@ class CatalogFilter extends QueryFilter
         $slug = $value['slug'];
         $value = $value['value'];
         $attribute=ProductAttribute::where('slug',$slug)->first();
-        if ($attribute->attribute_type == 'num' || $attribute->field_type == 'select2_multiple'){
+        if ($attribute->attribute_type == 'num' && $attribute->field_type == 'select2_multiple'){
             return $this->builder->when($value, function($query) use($value,$slug ,$attribute){
                 $value = urldecode($value);
                 $query->whereHas('numAttributes', function($q) use($value,$slug ,$attribute){
@@ -27,6 +27,7 @@ class CatalogFilter extends QueryFilter
             switch ($attribute->attribute_type){
                 case('num'):
                     $return = $this->builder->when($value, function($query) use($value,$slug,$attribute){
+
                         $value = urldecode($value);
                         $query->whereHas('numAttributes', function($q) use($value,$slug ,$attribute){
                             $q->where('attribute_id',$attribute->id)->where('value',$value);
@@ -38,9 +39,13 @@ class CatalogFilter extends QueryFilter
 
                     $return = $this->builder->when($value, function($query) use($value,$slug,$attribute){
                         $value = urldecode($value);
+
                         $query->whereHas('strAttributes', function($q) use($value,$slug ,$attribute){
+
                             $q->where('attribute_id',$attribute->id)->where('value',$value);
+
                         });
+
                     });
 
                     break;

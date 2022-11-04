@@ -47,7 +47,7 @@
                 <div class="catalog__main" x-data="{series: false}">
                     @if(!is_null($category) )
                         <h1 class="title title-h2 catalog-title">
-                            {!!file_get_contents(asset('storage/'.$category->icon))!!}
+{{--                            {!!file_get_contents(asset('storage/'.$category->icon))!!}--}}
                             {{$category->name}}</h1>
                     @endif
                     <div class="catalog__main-btn-group">

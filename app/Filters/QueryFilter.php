@@ -26,13 +26,13 @@ class QueryFilter
     {
         $this->builder = $builder;
         foreach ($this->filters() as $slug => $value) {
-
                 if (method_exists($this, $slug)) {
                     call_user_func_array([$this, $slug], array_filter([$value]));
                 }else{
                     $arrayForFilter = [
                         'slug'=>$slug,
                         'value'=>$value
+
                     ];
                     if (!is_null(ProductAttribute::where('slug',$slug)->first())){
                         call_user_func_array([$this, 'filterByAttribute'], array($arrayForFilter));

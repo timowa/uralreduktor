@@ -22,7 +22,7 @@
                         @foreach($filter[$i]['options'] as $key=>$value)
                     <li>
                         <label>
-                            <input type="radio" style="display: none" value="{{$key}}" name="{{$filter[$i]['slug']}}" {{isset($_GET[$filter[$i]['slug']])?$_GET[$filter[$i]['slug']]==$key?'checked':'':''}}>
+                            <input type="radio" style="display: none" value="{{$value}}" data-slug="{{$key}}" name="{{$filter[$i]['slug']}}" {{isset($_GET[$filter[$i]['slug']])?$_GET[$filter[$i]['slug']]==$key?'checked':'':''}}>
 
                             <button type="button" aria-label="button" @click="filter{{$i}} !=={{$loop->iteration}} ?filter{{$i}} = {{$loop->iteration}}: filter{{$i}} = null, close = true" :class="{'active': filter{{$i}} === {{$loop->iteration}}}"
 

@@ -84,6 +84,11 @@ class PageController extends Controller
         $products = Product::filter($filter);
         $pageFilter = $this->createFilter($products);
         $products= $products->paginate(12);
+        if($request->ajax()){
+            return response()->json([
+                'mainList'=>view('parts.catalog-list',compact('products'))->render()
+            ]);
+        }
         return view('catalog',compact('meta','products','pageFilter'));
     }
     public function category(Request $request,CatalogFilter $filter, $catSlug = null){
